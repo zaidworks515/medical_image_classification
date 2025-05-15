@@ -1,18 +1,8 @@
-# opencv-python
-# numpy
-# scikit-learn
-# scikit-image
-# matplotlib
-# pandas
-# openslide-python
-# openslide-bin
-# tqdm
-# slideio
-# tensorflow
-# pillow
-
 flask
 flask-cors
 dotenv
 pandas
 openpyxl
+tensorflow
+pillow
+numpy

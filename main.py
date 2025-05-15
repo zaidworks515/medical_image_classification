@@ -1,8 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import pandas as pd
 from config import port, server_ip
+from model_predictions import predict_image
 
 
 app = Flask(__name__, static_url_path='/local', static_folder='static')
@@ -60,6 +61,20 @@ def get_performance_metrics():
 
     except FileNotFoundError:
         return jsonify({'status': 'image not found'}), 404
+    
+    
+@app.route("/ai_predictions", methods=['POST'])
+def ai_predictions():
+    try:
+        if 'image' not in request.files:
+            return jsonify({'status': 'no image provided'}), 400
+        
+        image_file = request.files['image']
+        response = predict_image(image_file)
+        return jsonify({'output': response}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 
