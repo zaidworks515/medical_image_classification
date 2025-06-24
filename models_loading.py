@@ -2,6 +2,7 @@ import torch
 from torchvision import models, transforms
 import torch.nn as nn
 from PIL import Image
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("SELECTED DEVICE: ", device)
@@ -60,7 +61,10 @@ def hpv_model(image_path, model_type, threshold=0.75):
             output = bio_feature_filteration_model(img_tensor)
             probs = torch.softmax(output, dim=1)
             confidence, prediction = torch.max(probs, dim=1)
+            if prediction != 0:
+                os.remove(image_path)
             if confidence.item() < threshold:
+                os.remove(image_path)
                 return "other", confidence.item()
             else:
                 return (
