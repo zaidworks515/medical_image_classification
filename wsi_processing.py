@@ -3,10 +3,10 @@ from svs_to_png import extract_patches
 from models_loading import hpv_model
 
 
-def wsi_processor(folder="svs_data", session_id=None, filename=None):
+def wsi_processor(folder="svs_data", user_email=None, filename=None):
     try:
         current_working_dir = os.getcwd()
-        all_files = os.listdir(os.path.join(current_working_dir, folder, session_id))
+        all_files = os.listdir(os.path.join(current_working_dir, folder, user_email))
         hpv_count = 0
         no_hpv_count = 0
         patch_completion_status = False
@@ -17,10 +17,10 @@ def wsi_processor(folder="svs_data", session_id=None, filename=None):
             print("SVS FILE FOUND: ", file)
             if file == filename:
                 svs_file_path = os.path.join(
-                    current_working_dir, folder, session_id, file
+                    current_working_dir, folder, user_email, file
                 )
                 patch_completion_status = extract_patches(
-                    session_id=session_id, slide_path=svs_file_path
+                    user_email=user_email, slide_path=svs_file_path
                 )
 
             patch_completion_status = True
@@ -28,21 +28,21 @@ def wsi_processor(folder="svs_data", session_id=None, filename=None):
                 print("EXTRACTION COMPLETED, NOW PROCESSING PNG FILES")
                 os.remove(svs_file_path)
                 all_images = os.listdir(
-                    os.path.join(current_working_dir, "png_data", session_id)
+                    os.path.join(current_working_dir, "png_data", user_email)
                 )
                 for image in all_images:
                     image_path = os.path.join(
-                        current_working_dir, "png_data", session_id, image
+                        current_working_dir, "png_data", user_email, image
                     )
                     hpv_model(image_path, model_type="biological_filter")
                 print("1st filteration completed")
 
                 all_images = os.listdir(
-                    os.path.join(current_working_dir, "png_data", session_id)
+                    os.path.join(current_working_dir, "png_data", user_email)
                 )
                 for image in all_images:
                     image_path = os.path.join(
-                        current_working_dir, "png_data", session_id, image
+                        current_working_dir, "png_data", user_email, image
                     )
                     label, conf = hpv_model(image_path, model_type="hpv_classifier")
 
@@ -53,7 +53,7 @@ def wsi_processor(folder="svs_data", session_id=None, filename=None):
 
                 print("2nd filteration completed")
                 status = "successful"
-                os.remove(os.path.join(current_working_dir, "png_data", session_id))
+                os.remove(os.path.join(current_working_dir, "png_data", user_email))
 
         return hpv_count, no_hpv_count, status
     except Exception as e:

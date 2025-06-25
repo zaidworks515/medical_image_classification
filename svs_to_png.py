@@ -12,14 +12,14 @@ from tqdm import tqdm
 
 def extract_patches(
     save_dir="png_data",
-    session_id=None,
+    user_email=None,
     slide_path=None,
     LEVEL=0,
     patch_size=1024,
 ):
     """Extracts the given dimension patches from the highest resolution level of an .svs file."""
     try:
-        save_dir = os.path.join(os.getcwd(), save_dir, session_id)
+        save_dir = os.path.join(os.getcwd(), save_dir, user_email)
         os.makedirs(save_dir, exist_ok=True)
 
         slide = openslide.OpenSlide(slide_path)

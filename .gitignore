@@ -9,6 +9,9 @@ __pycache__/
 # AI model folders
 models/
 
+#DB Migrations
+migrations/
+
 # Distribution / packaging
 .Python
 build/
