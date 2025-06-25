@@ -27,7 +27,7 @@ bio_feature_filteration_model.fc = nn.Sequential(
 bio_feature_filteration_model = bio_feature_filteration_model.to(device)
 
 bio_feature_filteration_model.load_state_dict(
-    torch.load(r"models\bio_non_bio_filter_model.pth")
+    torch.load(os.path.join("models", "bio_non_bio_filter_model.pth"))
 )
 
 # FOR HPV CLASSIFICAITON, LOADING A DIFFERENT MODEL CONFIG WITH DIFFERENT WEIGHT.
@@ -47,7 +47,7 @@ hpv_classifier.fc = nn.Sequential(
 hpv_classifier = hpv_classifier.to(device)
 hpv_classifier = nn.DataParallel(hpv_classifier)
 
-hpv_classifier.load_state_dict(torch.load(r"models\hpv_classifier.pth"))
+hpv_classifier.load_state_dict(torch.load(os.path.join("models", "hpv_classifier.pth")))
 
 
 def hpv_model(image_path, model_type, threshold=0.75):

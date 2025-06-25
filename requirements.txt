@@ -16,6 +16,7 @@ slideio
 pillow
 pymysql
 Flask-Migrate
+cryptography
 
 # FOR GPU CONFIG..
 numpy==1.26.4
