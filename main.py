@@ -40,8 +40,6 @@ def background_process_wsi(
             folder=folder, user_email=user_email, filename=filename
         )
 
-        hpv_count, no_hpv_count, status = 12, 12, "successful"
-
         with app.app_context():
             process_file = ProcessFile.query.filter_by(
                 filename=filename, patient_mr_number=patient_mr_number
