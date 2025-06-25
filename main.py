@@ -65,6 +65,7 @@ def background_process_wsi(
                     process_file.processing_status = "failed"
 
                 db.session.commit()
+                print("DB ROW UPDATED.")
 
     except Exception as e:
         print(f"[ERROR] Background processing failed: {e}")

@@ -1,6 +1,7 @@
 import os
 from svs_to_png import extract_patches
 from models_loading import hpv_model
+import shutil
 
 
 def wsi_processor(folder="svs_data", user_email=None, filename=None):
@@ -10,7 +11,7 @@ def wsi_processor(folder="svs_data", user_email=None, filename=None):
         hpv_count = 0
         no_hpv_count = 0
         patch_completion_status = False
-        status = None
+        status = "failed"
         print("ALL FILES:", all_files)
 
         for file in all_files:
@@ -53,9 +54,15 @@ def wsi_processor(folder="svs_data", user_email=None, filename=None):
 
                 print("2nd filteration completed")
                 status = "successful"
-                os.remove(os.path.join(current_working_dir, "png_data", user_email))
+                print(
+                    "PNG PATH: ",
+                    os.path.join(current_working_dir, "png_data", user_email),
+                )
+                dir_path = os.path.join(current_working_dir, "png_data", user_email)
+                if os.path.exists(dir_path) and os.path.isdir(dir_path):
+                    shutil.rmtree(dir_path)
 
         return hpv_count, no_hpv_count, status
     except Exception as e:
-        print("ENTERED IN EXCEPTION")
+        print("ENTERED IN EXCEPTION:", e)
         return None, None, e
