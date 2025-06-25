@@ -156,11 +156,12 @@ def get_all_process_files():
 
         if mr_number:
             process_files = ProcessFile.query.filter_by(
-                user_email=user.id, patient_mr_number=mr_number
+                user_email=user.user_email, patient_mr_number=mr_number
             ).all()
         else:
-            process_files = ProcessFile.query.filter_by(user_email=user.id).all()
-
+            process_files = ProcessFile.query.filter_by(
+                user_email=user.user_email
+            ).all()
         result = [
             {
                 "id": pf.id,
