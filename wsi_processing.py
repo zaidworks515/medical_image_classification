@@ -24,7 +24,6 @@ def wsi_processor(folder="svs_data", user_email=None, filename=None):
                     user_email=user_email, slide_path=svs_file_path
                 )
 
-            patch_completion_status = True
             if patch_completion_status:
                 print("EXTRACTION COMPLETED, NOW PROCESSING PNG FILES")
                 os.remove(svs_file_path)
