@@ -51,8 +51,16 @@ hpv_classifier.load_state_dict(torch.load(os.path.join("models", "hpv_classifier
 
 
 def hpv_model(image_path, model_type, threshold=0.75):
+    if not os.path.exists(image_path):
+        print(f"[WARNING] Image not found: {image_path}")
+        return "other", 0.0
 
-    img = Image.open(image_path).convert("RGB")
+    try:
+        img = Image.open(image_path).convert("RGB")
+    except Exception as e:
+        print(f"[ERROR] Failed to open image: {image_path}, Error: {e}")
+        return "other", 0.0
+
     img_tensor = transform(img).unsqueeze(0).to(device)
 
     if model_type == "biological_filter":
@@ -61,16 +69,19 @@ def hpv_model(image_path, model_type, threshold=0.75):
             output = bio_feature_filteration_model(img_tensor)
             probs = torch.softmax(output, dim=1)
             confidence, prediction = torch.max(probs, dim=1)
-            if prediction != 0:
+
+            if prediction != 0 and os.path.exists(image_path):
                 os.remove(image_path)
+
             if confidence.item() < threshold:
-                os.remove(image_path)
+                if os.path.exists(image_path):
+                    os.remove(image_path)
                 return "other", confidence.item()
             else:
                 return (
                     prediction.item(),
                     confidence.item(),
-                )  # class 0 means biological features founded.
+                )  # class 0 means biological features found.
 
     elif model_type == "hpv_classifier":
         hpv_classifier.eval()
@@ -78,10 +89,11 @@ def hpv_model(image_path, model_type, threshold=0.75):
             output = hpv_classifier(img_tensor)
             probs = torch.softmax(output, dim=1)
             confidence, prediction = torch.max(probs, dim=1)
+
             if confidence.item() < threshold:
                 return "other", confidence.item()
             else:
                 return (
                     prediction.item(),
                     confidence.item(),
-                )  # class 0 means hpv features found in the given image.
+                )  # class 0 means HPV features found.
