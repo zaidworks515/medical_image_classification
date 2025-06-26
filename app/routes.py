@@ -143,9 +143,9 @@ def get_patients():
 @routes.route("/get_all_process_files", methods=["GET"])
 def get_all_process_files():
     try:
-        data = request.get_json()
-        user_email = data.get("user_email")
-        mr_number = data.get("mr_number", None)
+        # data = request.get_json()
+        user_email = request.args.get("user_email")
+        mr_number = request.args.get("mr_number", None)
 
         if not user_email:
             return jsonify({"message": "user_email is required"}), 400
